@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Department Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .form-container { margin-bottom: 20px; }
+        .form-container input, .form-container textarea { margin: 5px; padding: 5px; }
+        .form-container button { padding: 5px 10px; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+<h2>Department Management</h2>
+
+<div th:if="${errorMessage}" class="error">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<div class="form-container">
+    <h3 th:text="${department.departmentId} ? 'Edit Department' : 'Add New Department'"></h3>
+    <form th:action="${department.departmentId} ? '/department/update/' + ${department.departmentId} : '/department'" th:object="${department}" method="post">
+        <input type="hidden" th:field="*{departmentId}"/>
+        <label>Name: </label>
+        <input type="text" th:field="*{departmentName}" required/><br/>
+        <label>Address: </label>
+        <input type="text" th:field="*{departmentAdd}" required/><br/>
+        <label>Code: </label>
+        <input type="text" th:field="*{deparmentCode}" required/><br/>
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<h3>Department List</h3>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Code</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="dept : ${departments}">
+        <td th:text="${dept.departmentId}"></td>
+        <td th:text="${dept.departmentName}"></td>
+        <td th:text="${dept.departmentAdd}"></td>
+        <td th:text="${dept.deparmentCode}"></td>
+        <td>
+            <a th:href="@{/department/edit/{id}(id=${dept.departmentId})}">Edit</a> |
+            <a th:href="@{/department/delete/{id}(id=${dept.departmentId})}" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
